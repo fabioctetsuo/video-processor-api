@@ -1,0 +1,42 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+      - ./uploads:/usr/src/app/uploads
+      - ./outputs:/usr/src/app/outputs
+      - ./temp:/usr/src/app/temp
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - UPLOAD_PATH=./uploads
+      - OUTPUT_PATH=./outputs
+      - TEMP_PATH=./temp
+    depends_on:
+      - ffmpeg
+    networks:
+      - video-processor-network
+
+  ffmpeg:
+    image: jrottenberg/ffmpeg:4.4-alpine
+    volumes:
+      - ./uploads:/uploads
+      - ./temp:/temp
+      - ./outputs:/outputs
+    networks:
+      - video-processor-network
+    command: tail -f /dev/null
+
+networks:
+  video-processor-network:
+    driver: bridge
+
+volumes:
+  uploads:
+  outputs:
+  temp:

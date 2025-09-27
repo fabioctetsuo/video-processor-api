@@ -1,0 +1,25 @@
+FROM node:18-alpine
+
+# Install ffmpeg
+RUN apk add --no-cache ffmpeg
+
+# Create app directory
+WORKDIR /usr/src/app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Create necessary directories
+RUN mkdir -p uploads outputs temp
+
+# Copy source code
+COPY . .
+
+# Expose port
+EXPOSE 3000
+
+# Start the application in development mode
+CMD ["npm", "run", "start:dev"]

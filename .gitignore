@@ -1,0 +1,9 @@
+/dist
+/node_modules
+/outputs
+/temp
+/uploads
+/coverage
+/temp
+.env
+.DS_Store

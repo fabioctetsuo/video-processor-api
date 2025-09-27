@@ -1,0 +1,341 @@
+[
+  {
+    "description": "  As a user\n  I want to upload video files\n  So that I can extract frames and download them as a ZIP file",
+    "elements": [
+      {
+        "description": "",
+        "id": "video-processing;successfully-upload-and-process-a-video-file",
+        "keyword": "Scenario",
+        "line": 6,
+        "name": "Successfully upload and process a video file",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "I have a valid MP4 video file",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:29"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 131167
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 8,
+            "name": "I upload the video file to the API",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:68"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 11856250
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 9,
+            "name": "the video should be processed successfully",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:103"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 49040
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 10,
+            "name": "I should receive a success response with frame information",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:112"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 43791
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 11,
+            "name": "the frames should be available for download as a ZIP file",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:130"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 31499
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "video-processing;upload-an-unsupported-video-format",
+        "keyword": "Scenario",
+        "line": 13,
+        "name": "Upload an unsupported video format",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 14,
+            "name": "I have an unsupported file format",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:39"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 30750
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 15,
+            "name": "I upload the file to the API",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:74"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2005417
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 16,
+            "name": "I should receive a 400 error",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:136"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 61958
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "the error message should indicate invalid file format",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:141"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 96749
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "video-processing;upload-a-file-that-exceeds-size-limit",
+        "keyword": "Scenario",
+        "line": 19,
+        "name": "Upload a file that exceeds size limit",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 20,
+            "name": "I have a video file that exceeds the maximum size limit",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:48"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 495959
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 21,
+            "name": "I upload the file to the API",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:74"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 85460333
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 22,
+            "name": "I should receive a 400 error",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:136"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 128875
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 23,
+            "name": "the error message should indicate file size exceeded",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:147"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 35208
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "video-processing;get-processing-status",
+        "keyword": "Scenario",
+        "line": 25,
+        "name": "Get processing status",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 26,
+            "name": "there are processed video files",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:58"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 63416
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 27,
+            "name": "I request the processing status",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:80"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1509792
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 28,
+            "name": "I should receive a list of all processed files",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:153"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 44041
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 29,
+            "name": "each file should include filename, size, creation date, and download URL",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:163"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 25875
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "video-processing;download-processed-frames",
+        "keyword": "Scenario",
+        "line": 31,
+        "name": "Download processed frames",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 32,
+            "name": "there is a processed video file",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:63"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 40582
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 33,
+            "name": "I request to download the frames ZIP file",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:84"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2400333
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 34,
+            "name": "I should receive the ZIP file",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:177"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 31999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 35,
+            "name": "the file should contain all extracted frames",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:183"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 20083
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "video-processing",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "Video Processing",
+    "tags": [],
+    "uri": "test/features/video-processing.feature"
+  }
+]
