@@ -8,29 +8,28 @@ export class InMemoryProcessingResultRepository
 {
   private results: Map<string, ProcessingResult> = new Map();
 
-  async save(result: ProcessingResult): Promise<ProcessingResult> {
+  save(result: ProcessingResult): Promise<ProcessingResult> {
     this.results.set(result.getId(), result);
-    return result;
+    return Promise.resolve(result);
   }
 
-  async findById(id: string): Promise<ProcessingResult | null> {
-    return this.results.get(id) || null;
+  findById(id: string): Promise<ProcessingResult | null> {
+    return Promise.resolve(this.results.get(id) || null);
   }
 
-  async findByVideoFileId(
-    videoFileId: string,
-  ): Promise<ProcessingResult | null> {
+  findByVideoFileId(videoFileId: string): Promise<ProcessingResult | null> {
     const results = Array.from(this.results.values());
-    return (
-      results.find((result) => result.getVideoFileId() === videoFileId) || null
+    return Promise.resolve(
+      results.find((result) => result.getVideoFileId() === videoFileId) || null,
     );
   }
 
-  async findAll(): Promise<ProcessingResult[]> {
-    return Array.from(this.results.values());
+  findAll(): Promise<ProcessingResult[]> {
+    return Promise.resolve(Array.from(this.results.values()));
   }
 
-  async delete(id: string): Promise<void> {
+  delete(id: string): Promise<void> {
     this.results.delete(id);
+    return Promise.resolve();
   }
 }

@@ -14,7 +14,7 @@ export const multerConfig: MulterOptions = {
       FileExtension.create(ext);
       cb(null, true);
     } catch (error) {
-      cb(new BadRequestException(error.message), false);
+      cb(new BadRequestException((error as Error).message), false);
     }
   },
 };

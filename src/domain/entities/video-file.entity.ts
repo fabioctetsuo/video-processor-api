@@ -17,6 +17,7 @@ export class VideoFile {
     private readonly extension: FileExtension,
     private readonly size: FileSize,
     private readonly uploadedAt: Date,
+    private readonly userId: string,
     private status: VideoProcessingStatus = VideoProcessingStatus.PENDING,
     private processedAt?: Date,
     private errorMessage?: string,
@@ -27,6 +28,7 @@ export class VideoFile {
     storedName: string,
     extension: string,
     sizeInBytes: number,
+    userId: string,
   ): VideoFile {
     const fileExtension = FileExtension.create(extension);
     const fileSize = FileSize.create(sizeInBytes);
@@ -38,6 +40,7 @@ export class VideoFile {
       fileExtension,
       fileSize,
       new Date(),
+      userId,
     );
   }
 
@@ -48,6 +51,7 @@ export class VideoFile {
     extension: string,
     sizeInBytes: number,
     uploadedAt: Date,
+    userId: string,
     status: VideoProcessingStatus,
     processedAt?: Date,
     errorMessage?: string,
@@ -62,6 +66,7 @@ export class VideoFile {
       fileExtension,
       fileSize,
       uploadedAt,
+      userId,
       status,
       processedAt,
       errorMessage,
@@ -102,6 +107,10 @@ export class VideoFile {
 
   getErrorMessage(): string | undefined {
     return this.errorMessage;
+  }
+
+  getUserId(): string {
+    return this.userId;
   }
 
   markAsProcessing(): void {

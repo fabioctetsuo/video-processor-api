@@ -1,17 +1,23 @@
 {
   "default": {
     "require": [
-      "test/steps/**/*.ts"
+      "test/steps/setup.ts",
+      "test/steps/**/*.steps.ts"
     ],
     "requireModule": [
       "ts-node/register"
     ],
     "format": [
       "progress-bar",
-      "json:test/reports/cucumber-report.json"
+      "json:test/reports/cucumber-report.json",
+      "html:test/reports/cucumber-report.html"
     ],
     "paths": [
       "test/features/**/*.feature"
-    ]
+    ],
+    "parallel": 1,
+    "retry": 0,
+    "timeout": 60000,
+    "tags": "not @skip"
   }
 }

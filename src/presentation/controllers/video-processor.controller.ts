@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   Controller,
   Post,
@@ -8,8 +9,10 @@ import {
   UseInterceptors,
   HttpException,
   HttpStatus,
+  HttpCode,
   Res,
   Logger,
+  Headers,
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import {
@@ -22,17 +25,17 @@ import {
 import type { Response } from 'express';
 import { UploadVideoUseCase } from '../../application/use-cases/upload-video.use-case';
 import { ProcessVideoUseCase } from '../../application/use-cases/process-video.use-case';
+import { QueueVideoProcessingUseCase } from '../../application/use-cases/queue-video-processing.use-case';
 import { GetProcessingStatusUseCase } from '../../application/use-cases/get-processing-status.use-case';
 import { DownloadResultUseCase } from '../../application/use-cases/download-result.use-case';
+import { ListUserVideosUseCase } from '../../application/use-cases/list-user-videos.use-case';
 import { VideoProcessingResponseDto } from '../../application/dto/video-processing-response.dto';
-import { ProcessingStatusResponseDto } from '../../application/dto/processing-status-response.dto';
 import {
   UploadVideoDto,
   UploadSingleVideoDto,
 } from '../../application/dto/upload-video.dto';
 import { multerConfig } from '../../shared/utils/multer-config';
 import {
-  VideoFileNotFoundException,
   ProcessingResultNotFoundException,
   InvalidFileFormatException,
   VideoProcessingException,
@@ -46,11 +49,14 @@ export class VideoProcessorController {
   constructor(
     private readonly uploadVideoUseCase: UploadVideoUseCase,
     private readonly processVideoUseCase: ProcessVideoUseCase,
+    private readonly queueVideoProcessingUseCase: QueueVideoProcessingUseCase,
     private readonly getProcessingStatusUseCase: GetProcessingStatusUseCase,
     private readonly downloadResultUseCase: DownloadResultUseCase,
+    private readonly listUserVideosUseCase: ListUserVideosUseCase,
   ) {}
 
   @Post('upload')
+  @HttpCode(202)
   @ApiOperation({
     summary: 'Upload and process multiple video files (1-3 videos)',
   })
@@ -60,26 +66,16 @@ export class VideoProcessorController {
     type: UploadVideoDto,
   })
   @ApiResponse({
-    status: 200,
-    description: 'Videos processed successfully',
+    status: 202,
+    description: 'Videos queued for processing',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: { type: 'string' },
-        results: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              videoId: { type: 'string' },
-              originalName: { type: 'string' },
-              zipPath: { type: 'string' },
-              frameCount: { type: 'number' },
-              frameNames: { type: 'array', items: { type: 'string' } },
-            },
-          },
-        },
+        videoIds: { type: 'array', items: { type: 'string' } },
+        queuePosition: { type: 'number' },
+        estimatedProcessingTime: { type: 'string' },
       },
     },
   })
@@ -91,11 +87,25 @@ export class VideoProcessorController {
   @UseInterceptors(FilesInterceptor('videos', 3, multerConfig))
   async uploadVideos(
     @UploadedFiles() files: Express.Multer.File[],
-  ): Promise<{ success: boolean; message: string; results: any[] }> {
+    @Headers('x-user-id') userId: string,
+  ): Promise<{
+    success: boolean;
+    message: string;
+    videoIds: string[];
+    queuePosition?: number;
+    estimatedProcessingTime?: string;
+  }> {
     if (!files || files.length === 0) {
       throw new HttpException(
         'At least one video file is required',
         HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!userId) {
+      throw new HttpException(
+        'User authentication required',
+        HttpStatus.UNAUTHORIZED,
       );
     }
 
@@ -111,49 +121,46 @@ export class VideoProcessorController {
         `Uploading ${files.length} video(s): ${files.map((f) => f.originalname).join(', ')}`,
       );
 
-      const videoFiles = await this.uploadVideoUseCase.execute(files);
+      // Upload videos first
+      const videoFiles = await this.uploadVideoUseCase.execute(files, userId);
       this.logger.log(
         `Videos uploaded with IDs: ${videoFiles.map((v) => v.getId()).join(', ')}`,
       );
 
+      // Queue for processing instead of processing immediately
       const videoIds = videoFiles.map((v) => v.getId());
-      const results = await this.processVideoUseCase.execute(videoIds);
-      this.logger.log(`Videos processed successfully: ${results.length} files`);
-
-      const responseResults = results.map((result, index) => ({
-        videoId: videoFiles[index].getId(),
-        originalName: videoFiles[index].getOriginalName(),
-        zipPath: result.getZipFileName(),
-        frameCount: result.getFrameCount(),
-        frameNames: result.getFrameNames(),
-      }));
-
-      const totalFrames = results.reduce(
-        (sum, result) => sum + result.getFrameCount(),
-        0,
+      const queueResult = await this.queueVideoProcessingUseCase.execute(
+        videoIds,
+        1,
       );
+
+      if (!queueResult.queued) {
+        throw new Error('Failed to queue videos for processing');
+      }
+
+      this.logger.log(`Videos queued for processing: ${videoIds.length} files`);
+
+      // Estimate processing time (rough calculation: 30 seconds per video + queue wait)
+      const estimatedSeconds =
+        videoIds.length * 30 + (queueResult.queuePosition || 0) * 90;
+      const estimatedTime = this.formatEstimatedTime(estimatedSeconds);
 
       return {
         success: true,
-        message: `${files.length} video(s) processed successfully! ${totalFrames} total frames extracted.`,
-        results: responseResults,
+        message: `${files.length} video(s) uploaded and queued for processing. You will be notified when processing is complete.`,
+        videoIds,
+        queuePosition: queueResult.queuePosition,
+        estimatedProcessingTime: estimatedTime,
       };
     } catch (error) {
-      this.logger.error(`Videos processing failed: ${error.message}`);
+      this.logger.error(`Video upload/queue failed: ${error.message}`);
 
       if (error instanceof InvalidFileFormatException) {
         throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
       }
 
-      if (error instanceof VideoProcessingException) {
-        throw new HttpException(
-          error.message,
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      }
-
       throw new HttpException(
-        'An unexpected error occurred during videos processing',
+        'An unexpected error occurred during video upload or queuing',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -189,15 +196,26 @@ export class VideoProcessorController {
   @UseInterceptors(FileInterceptor('video', multerConfig))
   async uploadSingleVideo(
     @UploadedFile() file: Express.Multer.File,
+    @Headers('x-user-id') userId: string,
   ): Promise<VideoProcessingResponseDto> {
     if (!file) {
       throw new HttpException('Video file is required', HttpStatus.BAD_REQUEST);
     }
 
+    if (!userId) {
+      throw new HttpException(
+        'User authentication required',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
     try {
       this.logger.log(`Uploading video: ${file.originalname}`);
 
-      const videoFile = await this.uploadVideoUseCase.executeSingle(file);
+      const videoFile = await this.uploadVideoUseCase.executeSingle(
+        file,
+        userId,
+      );
       this.logger.log(`Video uploaded with ID: ${videoFile.getId()}`);
 
       const result = await this.processVideoUseCase.executeSingle(
@@ -234,20 +252,126 @@ export class VideoProcessorController {
     }
   }
 
-  @Get('status')
-  @ApiOperation({ summary: 'Get processing status of all videos' })
+  @Get()
+  @ApiOperation({
+    summary: 'List all videos for authenticated user with processing results',
+  })
   @ApiResponse({
     status: 200,
-    description: 'Processing status retrieved successfully',
-    type: ProcessingStatusResponseDto,
+    description: 'User videos retrieved successfully with processing results',
+    schema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'string' },
+          originalName: { type: 'string' },
+          status: { type: 'string' },
+          uploadedAt: { type: 'string' },
+          processedAt: { type: 'string' },
+          errorMessage: { type: 'string' },
+          processingResult: {
+            type: 'object',
+            properties: {
+              id: { type: 'string' },
+              zipPath: { type: 'string' },
+              zipFileName: { type: 'string' },
+              frameCount: { type: 'number' },
+              frameNames: { type: 'array', items: { type: 'string' } },
+              createdAt: { type: 'string' },
+            },
+          },
+        },
+      },
+    },
   })
-  async getStatus(): Promise<ProcessingStatusResponseDto> {
+  async listUserVideos(@Headers('x-user-id') userId: string): Promise<any[]> {
+    if (!userId) {
+      throw new HttpException(
+        'User authentication required',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
     try {
-      const statusData = await this.getProcessingStatusUseCase.execute();
+      const videosWithResults =
+        await this.listUserVideosUseCase.execute(userId);
+      return videosWithResults.map(({ video, processingResult }) => ({
+        id: video.getId(),
+        originalName: video.getOriginalName(),
+        status: video.getStatus(),
+        uploadedAt: video.getUploadedAt(),
+        processedAt: video.getProcessedAt(),
+        errorMessage: video.getErrorMessage(),
+        processingResult: processingResult
+          ? {
+              id: processingResult.getId(),
+              zipPath: processingResult.getZipPath(),
+              zipFileName: processingResult.getZipFileName(),
+              frameCount: processingResult.getFrameCount(),
+              frameNames: processingResult.getFrameNames(),
+              createdAt: processingResult.getCreatedAt(),
+            }
+          : null,
+      }));
+    } catch (error) {
+      this.logger.error(`Failed to list user videos: ${error.message}`);
+      throw new HttpException(
+        'Failed to retrieve user videos',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Get('status')
+  @ApiOperation({
+    summary: 'Get processing status of all videos and queue stats',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Processing status and queue stats retrieved successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        files: { type: 'array' },
+        total: { type: 'number' },
+        queue: {
+          type: 'object',
+          properties: {
+            messageCount: { type: 'number' },
+            consumerCount: { type: 'number' },
+            isConnected: { type: 'boolean' },
+          },
+        },
+      },
+    },
+  })
+  async getStatus(@Headers('x-user-id') userId: string): Promise<{
+    files: any[];
+    total: number;
+    queue: {
+      messageCount: number;
+      consumerCount: number;
+      isConnected: boolean;
+    };
+  }> {
+    if (!userId) {
+      throw new HttpException(
+        'User authentication required',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    try {
+      const [statusData, queueStats] = await Promise.all([
+        this.getProcessingStatusUseCase.execute(userId),
+        this.queueVideoProcessingUseCase.getQueueStats(),
+      ]);
 
       return {
         files: statusData.files,
         total: statusData.total,
+        queue: queueStats,
       };
     } catch (error) {
       this.logger.error(`Failed to get status: ${error.message}`);
@@ -293,6 +417,63 @@ export class VideoProcessorController {
         'Failed to download file',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
+    }
+  }
+
+  @Get('queue/stats')
+  @ApiOperation({ summary: 'Get detailed queue statistics' })
+  @ApiResponse({
+    status: 200,
+    description: 'Queue statistics retrieved successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        messageCount: { type: 'number' },
+        consumerCount: { type: 'number' },
+        isConnected: { type: 'boolean' },
+        estimatedWaitTime: { type: 'string' },
+      },
+    },
+  })
+  async getQueueStats(): Promise<{
+    messageCount: number;
+    consumerCount: number;
+    isConnected: boolean;
+    estimatedWaitTime: string;
+  }> {
+    try {
+      const stats = await this.queueVideoProcessingUseCase.getQueueStats();
+
+      // Estimate wait time based on queue size and consumer count
+      const avgProcessingTime = 90; // seconds per batch
+      const waitTimeSeconds =
+        stats.consumerCount > 0
+          ? (stats.messageCount * avgProcessingTime) / stats.consumerCount
+          : stats.messageCount * avgProcessingTime;
+
+      return {
+        ...stats,
+        estimatedWaitTime: this.formatEstimatedTime(waitTimeSeconds),
+      };
+    } catch (error) {
+      this.logger.error(`Failed to get queue stats: ${error.message}`);
+      throw new HttpException(
+        'Failed to retrieve queue statistics',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  private formatEstimatedTime(seconds: number): string {
+    if (seconds < 60) {
+      return `${seconds} seconds`;
+    } else if (seconds < 3600) {
+      const minutes = Math.ceil(seconds / 60);
+      return `${minutes} minute${minutes > 1 ? 's' : ''}`;
+    } else {
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.ceil((seconds % 3600) / 60);
+      return `${hours} hour${hours > 1 ? 's' : ''} ${minutes > 0 ? `${minutes} minute${minutes > 1 ? 's' : ''}` : ''}`;
     }
   }
 }

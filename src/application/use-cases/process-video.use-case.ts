@@ -5,6 +5,7 @@ import type { VideoFileRepository } from '../../domain/repositories/video-file.r
 import type { ProcessingResultRepository } from '../../domain/repositories/processing-result.repository';
 import type { VideoProcessorService } from '../../shared/interfaces/video-processor.interface';
 import type { FileStorageService } from '../../shared/interfaces/file-storage.interface';
+import { WebhookNotificationService } from '../../shared/services/webhook-notification.service';
 import {
   VideoFileNotFoundException,
   VideoProcessingException,
@@ -22,6 +23,7 @@ export class ProcessVideoUseCase {
     private readonly videoProcessorService: VideoProcessorService,
     @Inject('FileStorageService')
     private readonly fileStorageService: FileStorageService,
+    private readonly webhookNotificationService: WebhookNotificationService,
   ) {}
 
   async execute(videoFileIds: string[]): Promise<ProcessingResult[]> {
@@ -59,20 +61,46 @@ export class ProcessVideoUseCase {
 
       const results = await Promise.all(processingPromises);
 
-      for (const videoFile of validVideoFiles) {
+      // Mark videos as completed and send success notifications
+      for (let i = 0; i < validVideoFiles.length; i++) {
+        const videoFile = validVideoFiles[i];
+        const result = results[i];
+
         videoFile.markAsCompleted();
         await this.videoFileRepository.update(videoFile);
+
+        // Send success webhook notification
+        const downloadUrl = `/api/v1/videos/download/${result.getZipFileName()}`;
+        await this.webhookNotificationService.sendSuccessNotification(
+          videoFile.getId(),
+          videoFile.getUserId(),
+          videoFile.getOriginalName(),
+          downloadUrl,
+          result.getFrameCount(),
+          result.getZipFileName(),
+          new Date(),
+        );
       }
 
       return results;
     } catch (error) {
+      // Mark videos as failed and send failure notifications
       for (const videoFile of validVideoFiles) {
         if (videoFile.isProcessing()) {
-          videoFile.markAsFailed(error.message);
+          videoFile.markAsFailed((error as Error).message);
           await this.videoFileRepository.update(videoFile);
+
+          // Send failure webhook notification
+          await this.webhookNotificationService.sendFailureNotification(
+            videoFile.getId(),
+            videoFile.getUserId(),
+            videoFile.getOriginalName(),
+            (error as Error).message,
+            new Date(),
+          );
         }
       }
-      throw new VideoProcessingException(error.message);
+      throw new VideoProcessingException((error as Error).message);
     }
   }
 

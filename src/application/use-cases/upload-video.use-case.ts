@@ -14,7 +14,10 @@ export class UploadVideoUseCase {
     private readonly fileStorageService: FileStorageService,
   ) {}
 
-  async execute(files: Express.Multer.File[]): Promise<VideoFile[]> {
+  async execute(
+    files: Express.Multer.File[],
+    userId: string,
+  ): Promise<VideoFile[]> {
     if (files.length === 0) {
       throw new Error('At least one video file is required');
     }
@@ -41,12 +44,13 @@ export class UploadVideoUseCase {
           storedName,
           extension,
           file.size,
+          userId,
         );
 
         const savedFile = await this.videoFileRepository.save(videoFile);
         results.push(savedFile);
       } catch (error) {
-        if (error.message.includes('Invalid video file extension')) {
+        if ((error as Error).message.includes('Invalid video file extension')) {
           throw new InvalidFileFormatException(extension);
         }
         throw error;
@@ -56,7 +60,10 @@ export class UploadVideoUseCase {
     return results;
   }
 
-  async executeSingle(file: Express.Multer.File): Promise<VideoFile> {
-    return (await this.execute([file]))[0];
+  async executeSingle(
+    file: Express.Multer.File,
+    userId: string,
+  ): Promise<VideoFile> {
+    return (await this.execute([file], userId))[0];
   }
 }

@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- namespace.yaml
+- configmap.yaml
+- secret.yaml
+# - postgres-pvc.yaml  # Removed for no-storage deployment
+# - upload-pvc.yaml    # Removed for no-storage deployment
+- postgres-deployment.yaml
+- postgres-service.yaml
+- rabbitmq-deployment.yaml
+- rabbitmq-service.yaml
+- video-processor-api-deployment.yaml
+- video-processor-api-service.yaml
+- video-processor-api-hpa.yaml
+
+namespace: video-processor
+
+commonLabels:
+  project: video-processor
+  component: video-processing

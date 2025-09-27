@@ -1,6 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { spawn } from 'child_process';
-import { promisify } from 'util';
 import { readdir, mkdir } from 'fs/promises';
 import * as path from 'path';
 import { VideoProcessorService } from '../../shared/interfaces/video-processor.interface';
@@ -34,8 +33,10 @@ export class FFmpegVideoProcessorService implements VideoProcessorService {
 
       return frameFiles;
     } catch (error) {
-      this.logger.error(`FFmpeg processing failed: ${error.message}`);
-      throw new VideoProcessingException(error.message);
+      this.logger.error(
+        `FFmpeg processing failed: ${(error as Error).message}`,
+      );
+      throw new VideoProcessingException((error as Error).message);
     }
   }
 
@@ -44,7 +45,7 @@ export class FFmpegVideoProcessorService implements VideoProcessorService {
       const ffmpeg = spawn('ffmpeg', args);
       let stderr = '';
 
-      ffmpeg.stderr.on('data', (data) => {
+      ffmpeg.stderr.on('data', (data: Buffer) => {
         stderr += data.toString();
       });
 

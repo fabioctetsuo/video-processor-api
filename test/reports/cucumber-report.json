@@ -1,140 +1,98 @@
 [
   {
-    "description": "  As a user\n  I want to upload video files\n  So that I can extract frames and download them as a ZIP file",
+    "description": "  As a system administrator\n  I want the video processing system to handle errors gracefully\n  So that users receive appropriate feedback and the system remains stable",
     "elements": [
       {
         "description": "",
-        "id": "video-processing;successfully-upload-and-process-a-video-file",
-        "keyword": "Scenario",
-        "line": 6,
-        "name": "Successfully upload and process a video file",
+        "id": "error-handling-in-video-processing-system;file-validation-errors",
+        "keyword": "Scenario Outline",
+        "line": 18,
+        "name": "File validation errors",
         "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1892249
+            }
+          },
           {
             "arguments": [],
             "keyword": "Given ",
             "line": 7,
-            "name": "I have a valid MP4 video file",
+            "name": "the video processing system is running with queue support",
             "match": {
-              "location": "test/steps/video-processing.steps.ts:29"
+              "location": "test/steps/video-processing.steps.ts:15"
             },
             "result": {
               "status": "passed",
-              "duration": 131167
+              "duration": 2236458
             }
           },
           {
             "arguments": [],
-            "keyword": "When ",
+            "keyword": "And ",
             "line": 8,
-            "name": "I upload the video file to the API",
+            "name": "the system uses mock services for testing",
             "match": {
-              "location": "test/steps/video-processing.steps.ts:68"
+              "location": "test/steps/error-handling.steps.ts:15"
             },
             "result": {
               "status": "passed",
-              "duration": 11856250
+              "duration": 412624
             }
           },
           {
             "arguments": [],
-            "keyword": "Then ",
-            "line": 9,
-            "name": "the video should be processed successfully",
-            "match": {
-              "location": "test/steps/video-processing.steps.ts:103"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 49040
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "And ",
-            "line": 10,
-            "name": "I should receive a success response with frame information",
-            "match": {
-              "location": "test/steps/video-processing.steps.ts:112"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 43791
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "And ",
+            "keyword": "Given ",
             "line": 11,
-            "name": "the frames should be available for download as a ZIP file",
+            "name": "I have a file with \"text\" format",
             "match": {
-              "location": "test/steps/video-processing.steps.ts:130"
+              "location": "test/steps/error-handling.steps.ts:20"
             },
             "result": {
               "status": "passed",
-              "duration": 31499
+              "duration": 1561874
             }
-          }
-        ],
-        "tags": [],
-        "type": "scenario"
-      },
-      {
-        "description": "",
-        "id": "video-processing;upload-an-unsupported-video-format",
-        "keyword": "Scenario",
-        "line": 13,
-        "name": "Upload an unsupported video format",
-        "steps": [
+          },
           {
             "arguments": [],
-            "keyword": "Given ",
+            "keyword": "When ",
+            "line": 12,
+            "name": "I upload the file to the queue endpoint",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:160"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 10266874
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 13,
+            "name": "I should receive a 400 error",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:328"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 454374
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
             "line": 14,
-            "name": "I have an unsupported file format",
+            "name": "the error message should contain relevant information",
             "match": {
-              "location": "test/steps/video-processing.steps.ts:39"
+              "location": "test/steps/error-handling.steps.ts:267"
             },
             "result": {
               "status": "passed",
-              "duration": 30750
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "When ",
-            "line": 15,
-            "name": "I upload the file to the API",
-            "match": {
-              "location": "test/steps/video-processing.steps.ts:74"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 2005417
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "Then ",
-            "line": 16,
-            "name": "I should receive a 400 error",
-            "match": {
-              "location": "test/steps/video-processing.steps.ts:136"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 61958
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "And ",
-            "line": 17,
-            "name": "the error message should indicate invalid file format",
-            "match": {
-              "location": "test/steps/video-processing.steps.ts:141"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 96749
+              "duration": 335458
             }
           }
         ],
@@ -143,61 +101,95 @@
       },
       {
         "description": "",
-        "id": "video-processing;upload-a-file-that-exceeds-size-limit",
-        "keyword": "Scenario",
+        "id": "error-handling-in-video-processing-system;file-validation-errors",
+        "keyword": "Scenario Outline",
         "line": 19,
-        "name": "Upload a file that exceeds size limit",
+        "name": "File validation errors",
         "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 2258000
+            }
+          },
           {
             "arguments": [],
             "keyword": "Given ",
-            "line": 20,
-            "name": "I have a video file that exceeds the maximum size limit",
+            "line": 7,
+            "name": "the video processing system is running with queue support",
             "match": {
-              "location": "test/steps/video-processing.steps.ts:48"
+              "location": "test/steps/video-processing.steps.ts:15"
             },
             "result": {
               "status": "passed",
-              "duration": 495959
+              "duration": 42833
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the system uses mock services for testing",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 101834
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 11,
+            "name": "I have a file with \"image\" format",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 218292
             }
           },
           {
             "arguments": [],
             "keyword": "When ",
-            "line": 21,
-            "name": "I upload the file to the API",
+            "line": 12,
+            "name": "I upload the file to the queue endpoint",
             "match": {
-              "location": "test/steps/video-processing.steps.ts:74"
+              "location": "test/steps/video-processing.steps.ts:160"
             },
             "result": {
               "status": "passed",
-              "duration": 85460333
+              "duration": 2299582
             }
           },
           {
             "arguments": [],
             "keyword": "Then ",
-            "line": 22,
+            "line": 13,
             "name": "I should receive a 400 error",
             "match": {
-              "location": "test/steps/video-processing.steps.ts:136"
+              "location": "test/steps/video-processing.steps.ts:328"
             },
             "result": {
               "status": "passed",
-              "duration": 128875
+              "duration": 53332
             }
           },
           {
             "arguments": [],
             "keyword": "And ",
-            "line": 23,
-            "name": "the error message should indicate file size exceeded",
+            "line": 14,
+            "name": "the error message should contain relevant information",
             "match": {
-              "location": "test/steps/video-processing.steps.ts:147"
+              "location": "test/steps/error-handling.steps.ts:267"
             },
             "result": {
               "status": "passed",
-              "duration": 35208
+              "duration": 15208
             }
           }
         ],
@@ -206,61 +198,289 @@
       },
       {
         "description": "",
-        "id": "video-processing;get-processing-status",
-        "keyword": "Scenario",
-        "line": 25,
-        "name": "Get processing status",
+        "id": "error-handling-in-video-processing-system;file-validation-errors",
+        "keyword": "Scenario Outline",
+        "line": 20,
+        "name": "File validation errors",
         "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 2028291
+            }
+          },
           {
             "arguments": [],
             "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running with queue support",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 27082
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the system uses mock services for testing",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 13875
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 11,
+            "name": "I have a file with \"audio\" format",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 80665
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 12,
+            "name": "I upload the file to the queue endpoint",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:160"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1908542
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 13,
+            "name": "I should receive a 400 error",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:328"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 25375
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 14,
+            "name": "the error message should contain relevant information",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:267"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 15707
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "error-handling-in-video-processing-system;file-validation-errors",
+        "keyword": "Scenario Outline",
+        "line": 21,
+        "name": "File validation errors",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1572791
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running with queue support",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 16750
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the system uses mock services for testing",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 29833
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 11,
+            "name": "I have a file with \"document\" format",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 43874
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 12,
+            "name": "I upload the file to the queue endpoint",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:160"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1460458
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 13,
+            "name": "I should receive a 400 error",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:328"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 37334
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 14,
+            "name": "the error message should contain relevant information",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:267"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 12958
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "error-handling-in-video-processing-system;empty-request-validation",
+        "keyword": "Scenario",
+        "line": 23,
+        "name": "Empty request validation",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1575666
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running with queue support",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 27165
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the system uses mock services for testing",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 12291
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 24,
+            "name": "I prepare an empty upload request",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:63"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 287041
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 25,
+            "name": "I send the upload request",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:138"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2187040
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
             "line": 26,
-            "name": "there are processed video files",
+            "name": "I should receive a 400 error",
             "match": {
-              "location": "test/steps/video-processing.steps.ts:58"
+              "location": "test/steps/video-processing.steps.ts:328"
             },
             "result": {
               "status": "passed",
-              "duration": 63416
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "When ",
-            "line": 27,
-            "name": "I request the processing status",
-            "match": {
-              "location": "test/steps/video-processing.steps.ts:80"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 1509792
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "Then ",
-            "line": 28,
-            "name": "I should receive a list of all processed files",
-            "match": {
-              "location": "test/steps/video-processing.steps.ts:153"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 44041
+              "duration": 33541
             }
           },
           {
             "arguments": [],
             "keyword": "And ",
-            "line": 29,
-            "name": "each file should include filename, size, creation date, and download URL",
+            "line": 27,
+            "name": "the error should indicate that files are required",
             "match": {
-              "location": "test/steps/video-processing.steps.ts:163"
+              "location": "test/steps/error-handling.steps.ts:276"
             },
             "result": {
               "status": "passed",
-              "duration": 25875
+              "duration": 444915
             }
           }
         ],
@@ -269,61 +489,813 @@
       },
       {
         "description": "",
-        "id": "video-processing;download-processed-frames",
+        "id": "error-handling-in-video-processing-system;oversized-file-handling",
         "keyword": "Scenario",
-        "line": 31,
-        "name": "Download processed frames",
+        "line": 29,
+        "name": "Oversized file handling",
         "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1288791
+            }
+          },
           {
             "arguments": [],
             "keyword": "Given ",
-            "line": 32,
-            "name": "there is a processed video file",
+            "line": 7,
+            "name": "the video processing system is running with queue support",
             "match": {
-              "location": "test/steps/video-processing.steps.ts:63"
+              "location": "test/steps/video-processing.steps.ts:15"
             },
             "result": {
               "status": "passed",
-              "duration": 40582
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "When ",
-            "line": 33,
-            "name": "I request to download the frames ZIP file",
-            "match": {
-              "location": "test/steps/video-processing.steps.ts:84"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 2400333
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "Then ",
-            "line": 34,
-            "name": "I should receive the ZIP file",
-            "match": {
-              "location": "test/steps/video-processing.steps.ts:177"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 31999
+              "duration": 16708
             }
           },
           {
             "arguments": [],
             "keyword": "And ",
-            "line": 35,
-            "name": "the file should contain all extracted frames",
+            "line": 8,
+            "name": "the system uses mock services for testing",
             "match": {
-              "location": "test/steps/video-processing.steps.ts:183"
+              "location": "test/steps/error-handling.steps.ts:15"
             },
             "result": {
               "status": "passed",
-              "duration": 20083
+              "duration": 9750
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 30,
+            "name": "I have a video file that exceeds size limits",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:69"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1227249
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 31,
+            "name": "I upload the oversized file",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:158"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 101123999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 32,
+            "name": "the error should mention file size restrictions",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:282"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 380750
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "error-handling-in-video-processing-system;system-resource-limitations",
+        "keyword": "Scenario",
+        "line": 34,
+        "name": "System resource limitations",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 2652124
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running with queue support",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 48084
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the system uses mock services for testing",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 12749
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 35,
+            "name": "the system is under heavy load",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:88"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 330667
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 36,
+            "name": "I attempt to upload a video file",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:168"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 10673957
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 37,
+            "name": "the system should handle the load gracefully",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:291"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 353583
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 38,
+            "name": "I should receive an appropriate response",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:298"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 412749
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 39,
+            "name": "the system should remain responsive",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:305"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 346332
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "error-handling-in-video-processing-system;queue-system-resilience",
+        "keyword": "Scenario",
+        "line": 41,
+        "name": "Queue system resilience",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 3272917
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running with queue support",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 35291
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the system uses mock services for testing",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 9084
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 42,
+            "name": "the queue system experiences temporary issues",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:94"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 274459
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 43,
+            "name": "I upload a video file",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:216"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3587750
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 44,
+            "name": "the system should handle the queue error",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:313"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 212292
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 45,
+            "name": "I should receive an informative error message",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:320"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 197874
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 46,
+            "name": "the system should not crash",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:328"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 127584
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "error-handling-in-video-processing-system;invalid-endpoint-access",
+        "keyword": "Scenario",
+        "line": 48,
+        "name": "Invalid endpoint access",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 3120542
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running with queue support",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 38999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the system uses mock services for testing",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 10292
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 49,
+            "name": "I access an invalid API endpoint",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:99"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 196916
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 50,
+            "name": "I make the request",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:196"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2924042
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 51,
+            "name": "I should receive a 404 error",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:328"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 29541
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 52,
+            "name": "the error should indicate the endpoint was not found",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:336"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 157208
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "error-handling-in-video-processing-system;method-not-allowed-errors",
+        "keyword": "Scenario",
+        "line": 54,
+        "name": "Method not allowed errors",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1175459
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running with queue support",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 20708
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the system uses mock services for testing",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 19541
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 55,
+            "name": "I use an incorrect HTTP method",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:104"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 129416
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 56,
+            "name": "I make the request to a valid endpoint",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:203"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1447291
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 57,
+            "name": "the error should indicate the method is not allowed",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:341"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 209124
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "error-handling-in-video-processing-system;concurrent-request-handling",
+        "keyword": "Scenario",
+        "line": 59,
+        "name": "Concurrent request handling",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1042957
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running with queue support",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 17875
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the system uses mock services for testing",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 8915
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 60,
+            "name": "multiple users upload files simultaneously",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:109"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 176582
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 61,
+            "name": "all requests are processed",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:210"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 11088457
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 62,
+            "name": "each request should be handled independently",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:350"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 165417
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 63,
+            "name": "no request should interfere with others",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:358"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 98665
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 64,
+            "name": "all responses should be appropriate",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:363"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 88208
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "error-handling-in-video-processing-system;database-connectivity-issues",
+        "keyword": "Scenario",
+        "line": 66,
+        "name": "Database connectivity issues",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1199791
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running with queue support",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 24749
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the system uses mock services for testing",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 14500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 67,
+            "name": "the database becomes temporarily unavailable",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:127"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 177083
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 68,
+            "name": "I upload a video file",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:216"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2782333
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 69,
+            "name": "the system should handle the database error",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:370"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 131292
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 70,
+            "name": "I should receive a 500 error with appropriate message",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:377"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 122249
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 71,
+            "name": "the system should attempt to recover",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:387"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 88000
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "error-handling-in-video-processing-system;file-system-errors",
+        "keyword": "Scenario",
+        "line": 73,
+        "name": "File system errors",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1668041
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running with queue support",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 24790
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the system uses mock services for testing",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 8000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 74,
+            "name": "the file storage system has issues",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:132"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 182291
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 75,
+            "name": "I try to upload a video file",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:237"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2685083
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 76,
+            "name": "the system should detect the storage issue",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:392"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 178917
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 77,
+            "name": "I should receive an appropriate error response",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:399"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 191415
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 78,
+            "name": "the error should be logged for investigation",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:409"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 193249
             }
           }
         ],
@@ -331,10 +1303,2511 @@
         "type": "scenario"
       }
     ],
-    "id": "video-processing",
+    "id": "error-handling-in-video-processing-system",
     "line": 1,
     "keyword": "Feature",
-    "name": "Video Processing",
+    "name": "Error Handling in Video Processing System",
+    "tags": [],
+    "uri": "test/features/error-handling.feature"
+  },
+  {
+    "description": "  As a system operator\n  I want to monitor and manage the video processing queue\n  So that I can ensure optimal system performance and reliability",
+    "elements": [
+      {
+        "description": "",
+        "id": "queue-management-and-monitoring;queue-statistics-monitoring",
+        "keyword": "Scenario",
+        "line": 11,
+        "name": "Queue statistics monitoring",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1657834
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:130"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 221541
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the queue management system is operational",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 155999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 9,
+            "name": "mock services are configured for testing",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 113375
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 12,
+            "name": "there are videos in the processing queue",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:25"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 110874
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 13,
+            "name": "I request queue statistics",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:71"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1170500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 14,
+            "name": "I should receive current queue metrics",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:121"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 148958
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 15,
+            "name": "the metrics should include message count",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:130"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 112166
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "the metrics should include consumer count",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:141"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 108166
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "the metrics should include connection status",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:152"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 119041
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "the metrics should include estimated processing time",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:163"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 126875
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "queue-management-and-monitoring;empty-queue-status",
+        "keyword": "Scenario",
+        "line": 20,
+        "name": "Empty queue status",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1049332
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:130"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 47459
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the queue management system is operational",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 29667
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 9,
+            "name": "mock services are configured for testing",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 24915
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 21,
+            "name": "the processing queue is empty",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:30"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 116041
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 22,
+            "name": "I request queue statistics",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:71"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 790375
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 23,
+            "name": "I should receive zero message count",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:174"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 128333
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 24,
+            "name": "I should receive consumer information",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:183"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 109249
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 25,
+            "name": "the connection status should be healthy",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:194"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 112708
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "queue-management-and-monitoring;queue-health-monitoring",
+        "keyword": "Scenario",
+        "line": 27,
+        "name": "Queue health monitoring",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 960541
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:130"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 20125
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the queue management system is operational",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 9083
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 9,
+            "name": "mock services are configured for testing",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6750
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 28,
+            "name": "the queue system is operational",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:113"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 137709
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 29,
+            "name": "I check the system health status",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:77"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3226709
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 30,
+            "name": "I should see queue connectivity information",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:512"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 194707
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 31,
+            "name": "I should see processing statistics",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:522"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 111041
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 32,
+            "name": "all health indicators should show system status",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:393"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 130750
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "queue-management-and-monitoring;processing-status-tracking",
+        "keyword": "Scenario",
+        "line": 34,
+        "name": "Processing status tracking",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 935042
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:130"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 10707
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the queue management system is operational",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 8041
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 9,
+            "name": "mock services are configured for testing",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6541
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 35,
+            "name": "videos have been uploaded for processing",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:35"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 112583
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 36,
+            "name": "I request the processing status",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:189"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1545165
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 37,
+            "name": "I should see a list of all processed files",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:202"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 160458
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 38,
+            "name": "each file should have complete metadata",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:210"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 128333
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 39,
+            "name": "the total count should match the file list",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:221"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 114207
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "queue-management-and-monitoring;queue-capacity-management",
+        "keyword": "Scenario",
+        "line": 41,
+        "name": "Queue capacity management",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1532333
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:130"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 29749
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the queue management system is operational",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 8166
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 9,
+            "name": "mock services are configured for testing",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7750
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 42,
+            "name": "the system handles multiple video uploads",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:40"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 188500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 43,
+            "name": "videos are added to the queue",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:83"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2849707
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 44,
+            "name": "the queue should accept new messages",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:231"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 157666
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 45,
+            "name": "the message count should increase appropriately",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:239"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 151832
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 46,
+            "name": "the system should provide accurate position estimates",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:250"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 135874
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "queue-management-and-monitoring;consumer-scaling-information",
+        "keyword": "Scenario",
+        "line": 48,
+        "name": "Consumer scaling information",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1447583
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:130"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 40750
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the queue management system is operational",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 10208
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 9,
+            "name": "mock services are configured for testing",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7124
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 49,
+            "name": "the queue system has multiple consumers",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 181041
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 50,
+            "name": "I check queue statistics",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:92"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 942291
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 51,
+            "name": "I should see the current consumer count",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:261"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 133208
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 52,
+            "name": "the consumer count should be accurate",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:272"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 107875
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 53,
+            "name": "processing estimates should reflect consumer capacity",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:280"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 129458
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "queue-management-and-monitoring;queue-persistence-verification",
+        "keyword": "Scenario",
+        "line": 55,
+        "name": "Queue persistence verification",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 891749
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:130"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 14749
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the queue management system is operational",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7875
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 9,
+            "name": "mock services are configured for testing",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6583
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 56,
+            "name": "messages are added to the queue",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:50"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 111375
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 57,
+            "name": "I check queue statistics",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:92"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 659208
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 58,
+            "name": "messages should be persisted properly",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:290"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 136625
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 59,
+            "name": "the message count should be accurate",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:298"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 128125
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 60,
+            "name": "no messages should be lost",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:305"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 81083
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "queue-management-and-monitoring;real-time-queue-monitoring",
+        "keyword": "Scenario",
+        "line": 62,
+        "name": "Real-time queue monitoring",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 861332
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:130"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 15916
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the queue management system is operational",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7458
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 9,
+            "name": "mock services are configured for testing",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6082
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 63,
+            "name": "I monitor queue statistics continuously",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:55"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 124249
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 64,
+            "name": "new videos are uploaded",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:98"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4342333
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 65,
+            "name": "queue metrics should update in real-time",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:310"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 196750
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 66,
+            "name": "all statistics should remain consistent",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:315"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 118917
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 67,
+            "name": "the system should handle monitoring requests efficiently",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:329"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 132750
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "queue-management-and-monitoring;queue-performance-metrics",
+        "keyword": "Scenario",
+        "line": 69,
+        "name": "Queue performance metrics",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1102917
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:130"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 16291
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the queue management system is operational",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 8624
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 9,
+            "name": "mock services are configured for testing",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7333
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 70,
+            "name": "the system is processing videos",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:60"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 114041
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 71,
+            "name": "I request detailed queue statistics",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:107"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 997374
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 72,
+            "name": "I should receive processing performance data",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:337"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 190708
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 73,
+            "name": "the data should include throughput information",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:345"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 117999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 74,
+            "name": "estimated wait times should be calculated",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:353"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 112000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 75,
+            "name": "metrics should help with capacity planning",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:360"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 110333
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "queue-management-and-monitoring;queue-error-recovery",
+        "keyword": "Scenario",
+        "line": 77,
+        "name": "Queue error recovery",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 830083
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:130"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 16040
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the queue management system is operational",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7417
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 9,
+            "name": "mock services are configured for testing",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6332
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 78,
+            "name": "the queue system encounters issues",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:65"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 114957
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 79,
+            "name": "the system attempts to recover",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:113"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1558125
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 80,
+            "name": "queue functionality should be restored",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:372"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 140082
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 81,
+            "name": "statistics should reflect the recovery",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:377"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 111207
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 82,
+            "name": "no messages should be lost during recovery",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:388"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 108999
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "queue-management-and-monitoring",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "Queue Management and Monitoring",
+    "tags": [],
+    "uri": "test/features/queue-management.feature"
+  },
+  {
+    "description": "  As a user\n  I want to upload video files for background processing\n  So that I can handle peak loads efficiently without losing requests",
+    "elements": [
+      {
+        "description": "",
+        "id": "video-processing-with-queue-system;successfully-upload-single-video-for-queue-processing",
+        "keyword": "Scenario",
+        "line": 10,
+        "name": "Successfully upload single video for queue processing",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1211041
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running with queue support",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 21292
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the RabbitMQ message broker is available",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 157916
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 11,
+            "name": "I have a valid MP4 video file",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 111040
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 12,
+            "name": "I upload the video file to the queue endpoint",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:136"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2771499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 13,
+            "name": "the video should be queued successfully",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:254"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 162874
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 14,
+            "name": "I should receive a 202 accepted response",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:268"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 279459
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 15,
+            "name": "I should get queue position information",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:276"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 153250
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "I should get estimated processing time",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:304"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 139541
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "video-processing-with-queue-system;successfully-upload-multiple-videos-for-queue-processing",
+        "keyword": "Scenario",
+        "line": 18,
+        "name": "Successfully upload multiple videos for queue processing",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1147999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running with queue support",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 17041
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the RabbitMQ message broker is available",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 45958
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 19,
+            "name": "I have 2 valid MP4 video files",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:44"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 283542
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 20,
+            "name": "I upload the video files to the queue endpoint",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:148"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 5145375
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 21,
+            "name": "the videos should be queued successfully",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:261"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 226249
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 22,
+            "name": "I should receive a 202 accepted response",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:268"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 70707
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 23,
+            "name": "I should get queue position information for all videos",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:289"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 170125
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 24,
+            "name": "I should get estimated processing time for the batch",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:316"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 150374
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "video-processing-with-queue-system;upload-more-than-maximum-allowed-videos",
+        "keyword": "Scenario",
+        "line": 26,
+        "name": "Upload more than maximum allowed videos",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1185167
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running with queue support",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 13334
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the RabbitMQ message broker is available",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 8582
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 27,
+            "name": "I have 4 video files",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:66"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 241375
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 28,
+            "name": "I upload the video files to the queue endpoint",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:148"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1489915
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 29,
+            "name": "I should receive a 400 error",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:328"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 35624
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 30,
+            "name": "the error message should indicate maximum files exceeded",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:336"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 302916
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "video-processing-with-queue-system;upload-an-unsupported-video-format",
+        "keyword": "Scenario",
+        "line": 32,
+        "name": "Upload an unsupported video format",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1232415
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running with queue support",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 15959
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the RabbitMQ message broker is available",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 8957
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 33,
+            "name": "I have an unsupported file format",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:88"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 181958
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 34,
+            "name": "I upload the file to the queue endpoint",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:160"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 950833
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 35,
+            "name": "I should receive a 400 error",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:328"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 19332
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 36,
+            "name": "the error message should indicate invalid file format",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:343"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 215040
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "video-processing-with-queue-system;upload-without-any-files",
+        "keyword": "Scenario",
+        "line": 38,
+        "name": "Upload without any files",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 886332
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running with queue support",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 12708
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the RabbitMQ message broker is available",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7874
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 39,
+            "name": "I have no files to upload",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:106"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 140041
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 40,
+            "name": "I upload to the queue endpoint",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:172"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 950084
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 41,
+            "name": "I should receive a 400 error",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:328"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 70791
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 42,
+            "name": "the error message should indicate files are required",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:349"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 201749
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "video-processing-with-queue-system;process-single-video-synchronously-(backward-compatibility)",
+        "keyword": "Scenario",
+        "line": 44,
+        "name": "Process single video synchronously (backward compatibility)",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1002957
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running with queue support",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 16916
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the RabbitMQ message broker is available",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 10124
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 45,
+            "name": "I have a valid MP4 video file",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 57084
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 46,
+            "name": "I upload the video file to the single video endpoint",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:178"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1162164999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 47,
+            "name": "the video should be processed immediately",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:355"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1365499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 48,
+            "name": "I should receive processing result or error response",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:363"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 618499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 49,
+            "name": "the response should include frame information if successful",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:383"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1923875
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "video-processing-with-queue-system;get-processing-status-and-queue-statistics",
+        "keyword": "Scenario",
+        "line": 51,
+        "name": "Get processing status and queue statistics",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 8692833
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running with queue support",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 80249
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the RabbitMQ message broker is available",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 26541
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 52,
+            "name": "there are videos in the processing queue",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:25"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 232790
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 53,
+            "name": "I request the processing status",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:189"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7754415
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 54,
+            "name": "I should receive a list of all processed files",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:390"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 444625
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 55,
+            "name": "I should receive queue statistics",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:404"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 171999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 56,
+            "name": "queue statistics should include message count and consumer count",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:414"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 247374
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 57,
+            "name": "queue statistics should include connection status",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:433"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 195999
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "video-processing-with-queue-system;get-detailed-queue-statistics",
+        "keyword": "Scenario",
+        "line": 59,
+        "name": "Get detailed queue statistics",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 3306375
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running with queue support",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 23167
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the RabbitMQ message broker is available",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 14374
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 60,
+            "name": "the queue system is operational",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:113"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 56042
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 61,
+            "name": "I request detailed queue statistics",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:107"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 950083
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 62,
+            "name": "I should receive current queue metrics",
+            "match": {
+              "location": "test/steps/queue-management.steps.ts:121"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 33332
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 63,
+            "name": "I should receive estimated wait time",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:446"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 144374
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 64,
+            "name": "metrics should include message count and consumer count",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:457"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 122124
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 65,
+            "name": "metrics should include connection status",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:468"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 89916
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "video-processing-with-queue-system;download-processed-frames",
+        "keyword": "Scenario",
+        "line": 67,
+        "name": "Download processed frames",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1738166
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running with queue support",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 40665
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the RabbitMQ message broker is available",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 19624
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 68,
+            "name": "there is a processed video file available",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:118"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 265083
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 69,
+            "name": "I request to download the frames ZIP file",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:197"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 5494792
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 70,
+            "name": "I should receive the ZIP file or appropriate error",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:475"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 134542
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 71,
+            "name": "if successful the file should be properly formatted for download",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:483"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 130583
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "video-processing-with-queue-system;handle-queue-system-errors-gracefully",
+        "keyword": "Scenario",
+        "line": 73,
+        "name": "Handle queue system errors gracefully",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1484250
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running with queue support",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 38916
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the RabbitMQ message broker is available",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 17582
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 74,
+            "name": "the queue system encounters an error",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:124"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 248582
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 75,
+            "name": "I upload a video file",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:216"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3351458
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 76,
+            "name": "the system should handle the error gracefully",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:496"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 241415
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 77,
+            "name": "I should receive an appropriate error response",
+            "match": {
+              "location": "test/steps/error-handling.steps.ts:399"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 54917
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 78,
+            "name": "the error should be logged for debugging",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:506"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 145417
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "video-processing-with-queue-system;monitor-queue-health-and-connectivity",
+        "keyword": "Scenario",
+        "line": 80,
+        "name": "Monitor queue health and connectivity",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1712083
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the video processing system is running with queue support",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 30209
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "the RabbitMQ message broker is available",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 12332
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 81,
+            "name": "the video processing system is running",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:130"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 10874
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 82,
+            "name": "I check the system status",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:247"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2407333
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 83,
+            "name": "I should see queue connectivity information",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:512"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 88334
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 84,
+            "name": "I should see processing statistics",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:522"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 44084
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 85,
+            "name": "the information should be current and accurate",
+            "match": {
+              "location": "test/steps/video-processing.steps.ts:528"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 230625
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "video-processing-with-queue-system",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "Video Processing with Queue System",
     "tags": [],
     "uri": "test/features/video-processing.feature"
   }

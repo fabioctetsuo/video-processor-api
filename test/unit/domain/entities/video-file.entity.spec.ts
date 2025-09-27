@@ -11,6 +11,7 @@ describe('VideoFile Entity', () => {
         'stored-video.mp4',
         '.mp4',
         1024,
+        'user-123',
       );
 
       expect(videoFile.getId()).toBeDefined();
@@ -24,13 +25,25 @@ describe('VideoFile Entity', () => {
 
     it('should throw error for invalid file extension', () => {
       expect(() => {
-        VideoFile.create('test-video.txt', 'stored-video.txt', '.txt', 1024);
+        VideoFile.create(
+          'test-video.txt',
+          'stored-video.txt',
+          '.txt',
+          1024,
+          'user-123',
+        );
       }).toThrow('Invalid video file extension');
     });
 
     it('should throw error for negative file size', () => {
       expect(() => {
-        VideoFile.create('test-video.mp4', 'stored-video.mp4', '.mp4', -1);
+        VideoFile.create(
+          'test-video.mp4',
+          'stored-video.mp4',
+          '.mp4',
+          -1,
+          'user-123',
+        );
       }).toThrow('File size cannot be negative');
     });
   });
@@ -44,6 +57,7 @@ describe('VideoFile Entity', () => {
         'stored-video.mp4',
         '.mp4',
         1024,
+        'user-123',
       );
     });
 

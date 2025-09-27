@@ -1,42 +1,111 @@
+version: '3.8'
+
 services:
-  app:
+  video-processor-api:
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
+    container_name: video-processor-api
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - RABBITMQ_URL=${RABBITMQ_URL:-amqp://admin:admin123@rabbitmq:5672}
+      - RABBITMQ_QUEUE_NAME=${RABBITMQ_QUEUE_NAME:-video_processing_queue}
+      - RABBITMQ_EXCHANGE_NAME=${RABBITMQ_EXCHANGE_NAME:-video_processing_exchange}
+      - RABBITMQ_ROUTING_KEY=${RABBITMQ_ROUTING_KEY:-video.process}
+      - THROTTLE_TTL=${THROTTLE_TTL:-60000}
+      - THROTTLE_LIMIT=${THROTTLE_LIMIT:-10}
+      - UPLOAD_PATH=/usr/src/app/uploads
+      - OUTPUT_PATH=/usr/src/app/outputs
+      - TEMP_PATH=/usr/src/app/temp
+      - DATABASE_URL=postgresql://video_user:video_password@video-postgres:5432/video_db?schema=public
+      - WEBHOOK_URL=${WEBHOOK_URL:-}
     ports:
       - "3000:3000"
     volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-      - ./uploads:/usr/src/app/uploads
-      - ./outputs:/usr/src/app/outputs
-      - ./temp:/usr/src/app/temp
-    environment:
-      - NODE_ENV=development
-      - PORT=3000
-      - UPLOAD_PATH=./uploads
-      - OUTPUT_PATH=./outputs
-      - TEMP_PATH=./temp
+      - video_uploads:/usr/src/app/uploads
+      - video_outputs:/usr/src/app/outputs
+      - video_temp:/usr/src/app/temp
+    networks:
+      - microservices-network
     depends_on:
-      - ffmpeg
-    networks:
-      - video-processor-network
+      video-postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/v1/health || echo 'Service not ready'"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+    labels:
+      - "service=video-processor"
+      - "environment=production"
 
-  ffmpeg:
-    image: jrottenberg/ffmpeg:4.4-alpine
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: video-processor-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-admin}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS:-admin123}
+      RABBITMQ_DEFAULT_VHOST: /
+    ports:
+      - "5672:5672"   # AMQP port
+      - "15672:15672" # Management UI
     volumes:
-      - ./uploads:/uploads
-      - ./temp:/temp
-      - ./outputs:/outputs
+      - rabbitmq_data:/var/lib/rabbitmq
     networks:
-      - video-processor-network
-    command: tail -f /dev/null
+      - microservices-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+    labels:
+      - "service=rabbitmq"
+      - "environment=production"
+
+  video-postgres:
+    image: postgres:15-alpine
+    container_name: video-postgres
+    environment:
+      - POSTGRES_DB=video_db
+      - POSTGRES_USER=video_user
+      - POSTGRES_PASSWORD=video_password
+    ports:
+      - "5434:5432"
+    networks:
+      - microservices-network
+    volumes:
+      - video_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d video_db -U video_user"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    labels:
+      - "service=video-database"
+      - "environment=production"
 
 networks:
-  video-processor-network:
+  microservices-network:
+    name: microservices-network
     driver: bridge
+    external: true
 
 volumes:
-  uploads:
-  outputs:
-  temp:
+  video_uploads:
+    driver: local
+  video_outputs:
+    driver: local
+  video_temp:
+    driver: local
+  rabbitmq_data:
+    driver: local
+  video_postgres_data:
+    driver: local

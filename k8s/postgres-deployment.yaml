@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: video-postgres
+  namespace: video-processor
+  labels:
+    app: video-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: video-postgres
+  template:
+    metadata:
+      labels:
+        app: video-postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15-alpine
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: "video_db"
+        - name: POSTGRES_USER
+          value: "video_user"
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: video-processor-secret
+              key: POSTGRES_PASSWORD
+        # Volume mount removed for no-storage deployment
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "200m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - video_user
+            - -d
+            - video_db
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - video_user
+            - -d
+            - video_db
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      # Volumes removed for no-storage deployment

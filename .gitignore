@@ -7,3 +7,6 @@
 /temp
 .env
 .DS_Store
+/generated/prisma
+secrets.txt
+/test/reports/*

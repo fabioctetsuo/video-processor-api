@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum VideoProcessingStatus {
+  pending
+  processing
+  completed
+  failed
+}
+
+model VideoFile {
+  id            String                 @id @default(cuid())
+  originalName  String                 @map("original_name")
+  storedName    String                 @map("stored_name")
+  extension     String
+  sizeInBytes   Int                    @map("size_in_bytes")
+  uploadedAt    DateTime               @default(now()) @map("uploaded_at")
+  userId        String                 @map("user_id")
+  status        VideoProcessingStatus  @default(pending)
+  processedAt   DateTime?              @map("processed_at")
+  errorMessage  String?                @map("error_message")
+  createdAt     DateTime               @default(now()) @map("created_at")
+  updatedAt     DateTime               @updatedAt @map("updated_at")
+  
+  // Relation to processing results
+  results       ProcessingResult[]
+
+  @@map("video_files")
+  @@index([userId], name: "idx_video_files_user_id")
+  @@index([status], name: "idx_video_files_status")
+}
+
+model ProcessingResult {
+  id          String   @id @default(cuid())
+  videoFileId String   @map("video_file_id")
+  zipPath     String   @map("zip_path")
+  frameCount  Int      @map("frame_count")
+  frameNames  String[] @map("frame_names")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  
+  // Relation to video file
+  videoFile   VideoFile @relation(fields: [videoFileId], references: [id], onDelete: Cascade)
+
+  @@map("processing_results")
+  @@index([videoFileId], name: "idx_processing_results_video_file_id")
+}

@@ -4,6 +4,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { PresentationModule } from './presentation/presentation.module';
+import { MessagingModule } from './infrastructure/messaging/messaging.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { PresentationModule } from './presentation/presentation.module';
       rootPath: join(__dirname, '..', 'outputs'),
       serveRoot: '/static',
     }),
+    MessagingModule,
     PresentationModule,
   ],
 })

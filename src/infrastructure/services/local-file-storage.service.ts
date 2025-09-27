@@ -19,7 +19,7 @@ export class LocalFileStorageService implements FileStorageService {
 
       return filePath;
     } catch (error) {
-      this.logger.error(`Failed to save file: ${error.message}`);
+      this.logger.error(`Failed to save file: ${(error as Error).message}`);
       throw error;
     }
   }
@@ -29,7 +29,9 @@ export class LocalFileStorageService implements FileStorageService {
       await unlink(filePath);
       this.logger.log(`File deleted: ${filePath}`);
     } catch (error) {
-      this.logger.warn(`Failed to delete file ${filePath}: ${error.message}`);
+      this.logger.warn(
+        `Failed to delete file ${filePath}: ${(error as Error).message}`,
+      );
     }
   }
 
@@ -48,7 +50,7 @@ export class LocalFileStorageService implements FileStorageService {
       return stats.size;
     } catch (error) {
       this.logger.error(
-        `Failed to get file size for ${filePath}: ${error.message}`,
+        `Failed to get file size for ${filePath}: ${(error as Error).message}`,
       );
       throw error;
     }
@@ -81,7 +83,7 @@ export class LocalFileStorageService implements FileStorageService {
             archive.append(createReadStream(file), { name: fileName });
           });
 
-          archive.finalize();
+          void archive.finalize();
         })
         .catch(reject);
     });

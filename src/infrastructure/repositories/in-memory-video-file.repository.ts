@@ -6,25 +6,33 @@ import { VideoFileRepository } from '../../domain/repositories/video-file.reposi
 export class InMemoryVideoFileRepository implements VideoFileRepository {
   private videoFiles: Map<string, VideoFile> = new Map();
 
-  async save(videoFile: VideoFile): Promise<VideoFile> {
+  save(videoFile: VideoFile): Promise<VideoFile> {
     this.videoFiles.set(videoFile.getId(), videoFile);
-    return videoFile;
+    return Promise.resolve(videoFile);
   }
 
-  async findById(id: string): Promise<VideoFile | null> {
-    return this.videoFiles.get(id) || null;
+  findById(id: string): Promise<VideoFile | null> {
+    return Promise.resolve(this.videoFiles.get(id) || null);
   }
 
-  async findAll(): Promise<VideoFile[]> {
-    return Array.from(this.videoFiles.values());
+  findAll(): Promise<VideoFile[]> {
+    return Promise.resolve(Array.from(this.videoFiles.values()));
   }
 
-  async update(videoFile: VideoFile): Promise<VideoFile> {
+  findByUserId(userId: string): Promise<VideoFile[]> {
+    const userVideos = Array.from(this.videoFiles.values()).filter(
+      (video) => video.getUserId() === userId,
+    );
+    return Promise.resolve(userVideos);
+  }
+
+  update(videoFile: VideoFile): Promise<VideoFile> {
     this.videoFiles.set(videoFile.getId(), videoFile);
-    return videoFile;
+    return Promise.resolve(videoFile);
   }
 
-  async delete(id: string): Promise<void> {
+  delete(id: string): Promise<void> {
     this.videoFiles.delete(id);
+    return Promise.resolve();
   }
 }

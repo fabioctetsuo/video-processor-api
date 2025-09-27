@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: video-processor-api-config
+  namespace: video-processor
+data:
+  NODE_ENV: "production"
+  PORT: "3000"
+  DATABASE_URL: "postgresql://video_user:video_password@video-postgres:5432/video_db?schema=public"
+  RABBITMQ_URL: "amqp://guest:guest@video-rabbitmq:5672"
+  WEBHOOK_URL: "https://webhook.site/1d4e907e-ec9d-4715-9361-26ce5b7fc18a"
+  UPLOAD_DIR: "/app/uploads"
+  MAX_FILE_SIZE: "104857600"  # 100MB
+  ALLOWED_EXTENSIONS: "mp4,avi,mov,mkv,wmv,flv,webm"

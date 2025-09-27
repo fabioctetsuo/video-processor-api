@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: video-processor-api
+  namespace: video-processor
+  labels:
+    app: video-processor-api
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: video-processor-api
+  template:
+    metadata:
+      labels:
+        app: video-processor-api
+    spec:
+      initContainers:
+      - name: wait-for-postgres
+        image: busybox:1.36
+        command: ['sh', '-c']
+        args:
+        - |
+          until nc -z video-postgres 5432; do
+            echo "Waiting for PostgreSQL..."
+            sleep 2
+          done
+          echo "PostgreSQL is ready!"
+      - name: wait-for-rabbitmq
+        image: busybox:1.36
+        command: ['sh', '-c']
+        args:
+        - |
+          until nc -z video-rabbitmq 5672; do
+            echo "Waiting for RabbitMQ..."
+            sleep 2
+          done
+          echo "RabbitMQ is ready!"
+      containers:
+      - name: video-processor-api
+        image: fabioctetsuo/video-processor-api:latest
+        ports:
+        - containerPort: 3000
+        envFrom:
+        - configMapRef:
+            name: video-processor-api-config
+        # Volume mount removed for no-storage deployment
+        # Note: Uploads will be stored in ephemeral container storage
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "200m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /api/v1/videos/queue/stats
+            port: 3000
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /api/v1/videos/queue/stats
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+      # Volumes removed for no-storage deployment
